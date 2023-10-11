@@ -4,3 +4,10 @@
 body{
   padding: 1rem;
 }
+form input{
+  padding: 5px;
+  margin-right: 10px;
+}
+form button{
+  padding: 5px;
+}
