@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { authService } from "../firebase";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+  GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 const Auth = () => {
   const [email, setEmail] = useState('');
@@ -8,6 +9,7 @@ const Auth = () => {
   const [newAccount, setNewAccount] = useState(true);
   const [error, setError] = useState('');
   const auth = getAuth();
+  const provider = new GoogleAuthProvider();
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -52,6 +54,22 @@ const Auth = () => {
   }
 
   const toggleAccount = () => setNewAccount((prev) => !prev); //서로의 반대 값을 돌려줌
+  
+  const onSocialClick = () => {
+    signInWithPopup(auth, provider)
+    .then((result) => {
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const token = credential.accessToken;
+      const user = result.user;
+      console.log(token, user);
+    }).catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      const email = error.customData.email;
+      const credential = GoogleAuthProvider.credentialFromError(error);
+      console.log(errorCode, errorMessage, email, credential);
+    });
+  }
 
   return(
     <div>
@@ -61,7 +79,7 @@ const Auth = () => {
           <input name="password" type="password" placeholder="password" value={password} onChange={onChange}/>
         </p>
         <button type="submit">{newAccount ? "계정생성" : "로그인"}</button>
-        <button type="button">{newAccount ? "구글 계정 생성" : "구글 로그인"}</button>
+        <button type="button" onClick={onSocialClick}>{newAccount ? "구글 계정 생성" : "구글 로그인"}</button>
       </form>
       <hr/>
       <button type="button" onClick={toggleAccount}>{newAccount ? "로그인" : "계정생성"}</button>
