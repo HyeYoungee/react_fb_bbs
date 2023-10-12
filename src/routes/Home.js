@@ -68,7 +68,7 @@ const Home = (userObj) => {
       </form>
       <ul>
       {
-        posts.map(item => <Post key={item.id} postObj={item}/>)
+        posts.map(item => <Post key={item.id} postObj={item} userConfirm={item.uid === userObj.userObj}/>)
       }
       </ul>
     </div>
