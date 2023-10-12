@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../firebase";
-import { collection, getDocs, addDoc, serverTimestamp } from "firebase/firestore"; 
+import Post from "../components/Post";
+import { doc, onSnapshot, query, orderBy, collection, getDocs, addDoc, serverTimestamp } from "firebase/firestore"; 
 
-const Home = () => {
+const Home = (userObj) => {
   const [post, setPost] = useState('');
   const [posts, setPosts] = useState([]);
 
@@ -16,7 +17,8 @@ const Home = () => {
     try{
       const docRef = await addDoc(collection(db, "posts"), {
         content: post,
-        date: serverTimestamp()
+        date: serverTimestamp(),
+        uid: userObj.userObj
       });
       console.log("Document written with ID: ", docRef.id);
     } catch(e){
@@ -24,6 +26,7 @@ const Home = () => {
     }
   }
 
+  /*
   const getPosts = async () => {
     const querySnapshot = await getDocs(collection(db, "posts"));
     querySnapshot.forEach((doc) => {
@@ -34,12 +37,27 @@ const Home = () => {
       setPosts((prev) => [postObj, ...prev]);
     });
   }
+  */
 
   // const test = {title:'title', content:'content1'};
   // const testcopy = {...test, title:'title2'}; //데이터를 복제해서 값 변경
    
   useEffect(() => {
-    getPosts();
+    const q = query(collection(db, "posts"), orderBy("date"));
+    onSnapshot(q, (querySnapshot) => {
+      /*
+      const cities = [];
+      querySnapshot.forEach((doc) => {
+          cities.push(doc.data().name);
+      });
+      */
+      const postArr = querySnapshot.docs.map((doc) => ({
+        id:doc.id,
+        ...doc.data()
+      }))
+      setPosts(postArr);
+      console.log(postArr);
+    });
   }, [])
 
   return(
@@ -50,7 +68,7 @@ const Home = () => {
       </form>
       <ul>
       {
-        posts.map(item => <li key={item.id}>{item.content}</li>)
+        posts.map(item => <Post key={item.id} postObj={item}/>)
       }
       </ul>
     </div>

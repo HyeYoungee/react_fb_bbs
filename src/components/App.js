@@ -6,13 +6,14 @@ import '../App.css';
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [init, setInit] = useState(false);
+  const [userObj, setUserObj] = useState(null);
   
   useEffect(() => {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       if(user){
         setIsLoggedIn(true);
-        console.log(user);
+        setUserObj(user.uid);
       } else{
         //user is signed out
         setIsLoggedIn(false);
@@ -21,10 +22,12 @@ function App() {
     });
   }, []);
 
+  console.log(userObj);
+
   return (
     <>
       {init ? 
-        <AppRouter isLoggedIn={isLoggedIn}/>  
+        <AppRouter isLoggedIn={isLoggedIn} userObj={userObj}/>  
         : "회원정보 확인중..."
       }
     </>
