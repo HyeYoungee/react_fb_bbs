@@ -51,14 +51,23 @@ const Auth = () => {
     }
   }
 
+  const toggleAccount = () => setNewAccount((prev) => !prev); //서로의 반대 값을 돌려줌
+
   return(
     <div>
       <form onSubmit={onSubmit}>
-        <input name="email" type="email" placeholder="email" value={email} onChange={onChange}/>
-        <input name="password" type="password" placeholder="password" value={password} onChange={onChange}/>
-        <button>{newAccount ? "Create Account" : "Login"}</button>
+        <p>
+          <input name="email" type="email" placeholder="email" value={email} onChange={onChange}/>
+          <input name="password" type="password" placeholder="password" value={password} onChange={onChange}/>
+        </p>
+        <button type="submit">{newAccount ? "계정생성" : "로그인"}</button>
+        <button type="button">{newAccount ? "구글 계정 생성" : "구글 로그인"}</button>
       </form>
+      <hr/>
+      <button type="button" onClick={toggleAccount}>{newAccount ? "로그인" : "계정생성"}</button>
+
       {error}
+
     </div>
   )
 }
