@@ -9,19 +9,21 @@ const Home = (userObj) => {
   const [post, setPost] = useState('');
   const [posts, setPosts] = useState([]);
   const [attachment, setAttachment] = useState();
+  // const [attachmentUrl, setAttachmentUrl] = useState('');
 
   const onChange = (e) => {
     // const val = e.target.value; //ECMA script 2015이전 문법
     const {target:{value}} = e; //ES6 버전
     setPost(value);
   }
+
   const onSubmit = async (e) => {
     e.preventDefault();
     const storage = getStorage();
     const storageRef = ref(storage, `${userObj.userObj}/${uuidv4()}`); //접속한 사용자id명 폴더/파일
 
     uploadString(storageRef, attachment, 'data_url').then(async (snapshot) => {
-      const attachmentUrl = await getDownloadURL(storageRef);
+      let attachmentUrl = await getDownloadURL(storageRef);
       
       try{
         await addDoc(collection(db, "posts"), {
@@ -30,6 +32,8 @@ const Home = (userObj) => {
           uid: userObj.userObj,
           attachmentUrl
         });
+        // setAttachmentUrl('');
+        attachmentUrl = '';
       } catch(e){
         console.log(e);
       }
