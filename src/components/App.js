@@ -15,7 +15,6 @@ function App() {
         setIsLoggedIn(true);
         setUserObj(user.uid);
       } else{
-        //user is signed out
         setIsLoggedIn(false);
       }
       setInit(true);

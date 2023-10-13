@@ -5,7 +5,7 @@ import { doc, deleteDoc, updateDoc } from "firebase/firestore";
 const Post = ({postObj,userConfirm})=>{
 
   const deletePost = async () =>{
-    if(window.confirm('정말 삭제할까요')){
+    if(window.confirm('정말 삭제할까요?')){
       await deleteDoc(doc(db, "posts", postObj.id));
     }    
   }

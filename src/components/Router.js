@@ -22,7 +22,6 @@ const AppRouter = ({isLoggedIn, userObj}) => {
       </Routes>
     </>
   )
-
 }
 
 export default AppRouter; 
